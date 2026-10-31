@@ -27,7 +27,7 @@ Monthly MIS reporting often involves repetitive manual work: loading data, clean
 
 **Measurement notes:** The manual baseline of 3.5 hours (210 minutes) is an estimate, not a stopwatch-verified measurement of a company's process. The automated runtime of **2.71 seconds** was measured on the development machine during a successful run of `python run_monthly_report.py`. Actual runtime can vary with hardware, data size, and workload.
 
-Using these figures, the estimated elapsed time saved is approximately **209.95 minutes per run**, equivalent to an estimated **99.98% reduction in report-generation elapsed time**. This is a project-level comparison, not a guarantee of business-wide productivity savings; review, interpretation, and distribution may still require human effort.
+Using these figures, the estimated elapsed time saved is approximately **210 minutes per run**, equivalent to an estimated **over 99% reduction in report-generation elapsed time**. This is a project-level comparison, not a guarantee of business-wide productivity savings; review, interpretation, and distribution may still require human effort.
 
 To measure runtime on your own machine, run this command in PowerShell from the project directory:
 
