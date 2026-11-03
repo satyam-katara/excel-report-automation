@@ -1,205 +1,275 @@
-# Excel Report Automation — Superstore MIS Dashboard
+<div align="center">
 
-A one-command Python pipeline that transforms raw Superstore sales data (CSV) into a professionally formatted, 8-sheet Excel MIS workbook with an executive dashboard. The project also includes a VBA control panel and a Windows Task Scheduler setup for repeatable monthly report generation.
+# 📊 Excel Report Automation
+### Superstore MIS Dashboard
 
-## The Problem
+**One Python command turns raw sales data into a formatted 8-sheet Excel MIS workbook with an executive dashboard.**
 
-Monthly MIS reporting often involves repetitive manual work: loading data, cleaning records, building summaries, creating charts, formatting workbooks, and repeating the process for each reporting cycle. This project uses an estimated manual baseline of **3.5 analyst-hours per cycle**. Manual processes can also introduce copy-paste errors, formula inconsistencies, and variations in report formatting.
+![Python](https://img.shields.io/badge/Python-3.x-3776AB?logo=python&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-data%20processing-150458?logo=pandas&logoColor=white)
+![OpenPyXL](https://img.shields.io/badge/OpenPyXL-Excel%20output-217346?logo=microsoftexcel&logoColor=white)
+![VBA](https://img.shields.io/badge/VBA-control%20panel-5C2D91)
+![Pytest](https://img.shields.io/badge/Pytest-6%20tests-0A9EDC?logo=pytest&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?logo=windows&logoColor=white)
 
-## What This Project Does
+[Overview](#-overview) · [Impact](#-project-impact) · [How it works](#-how-it-works) · [Workbook](#-workbook-contents) · [Quickstart](#-quickstart) · [Scheduling](#-scheduling) · [VBA](#-vba-integration) · [Tests](#-tests)
 
-- Loads and validates **9,994 Superstore sales records** covering 2014–2017.
-- Cleans and prepares the data, including handling missing values, duplicates, and invalid dates.
-- Calculates business KPIs: sales, profit, profit margin, order volume, and average order value (AOV).
-- Produces category, subcategory, regional, state, monthly, and yearly analysis.
-- Generates an Excel workbook with **8 worksheets, 6 KPI cards, 4 charts, conditional formatting, AutoFilters, and print-ready layouts**.
-- Detects the latest reporting month available in the input dataset.
-- Includes a VBA control panel for selecting a reporting month and launching report generation.
-- Supports scheduled execution through Windows Task Scheduler.
+</div>
 
-## Project Impact
+---
+
+## 📌 Overview
+
+Monthly MIS reporting is repetitive. Someone loads the data, cleans it, builds summaries, makes charts, formats the file, and then does it all again next month. Manual work like this also leads to copy-paste errors, broken formulas, and reports that look different each cycle.
+
+This project automates the whole process. The estimated manual effort is **3.5 analyst-hours per report cycle**.
+
+![Executive Dashboard](screenshots/executive_dashboard.png)
+
+### What it does
+
+- Loads and validates **9,994 Superstore sales records** (2014–2017)
+- Cleans the data: missing values, duplicates, invalid dates
+- Calculates KPIs: sales, profit, profit margin, order volume, average order value (AOV)
+- Builds category, subcategory, region, state, monthly, and yearly analysis
+- Creates an Excel workbook with:
+  - **8 worksheets**
+  - **6 KPI cards**
+  - **4 charts**
+  - conditional formatting, AutoFilters, and print-ready layouts
+- Detects the latest reporting month in the input data
+- Includes a **VBA control panel** to pick a month and start the report
+- Runs on a schedule with **Windows Task Scheduler**
+
+---
+
+## ⚡ Project Impact
 
 | Metric | Manual process | Automated pipeline |
 |---|---:|---:|
-| Time per report | Approximately 3.5 hours (estimated) | 2.71 seconds (measured) |
-| Workbook structure | Manually prepared | 8 consistent worksheets |
-| Repeated calculations | Manual / spreadsheet-based | Automated Python calculations |
+| Time per report | ~3.5 hours *(estimated)* | **2.71 seconds** *(measured)* |
+| Workbook structure | Built by hand each time | 8 consistent worksheets |
+| Repeated calculations | Manual / spreadsheet-based | Automated in Python |
 
-**Measurement notes:** The manual baseline of 3.5 hours (210 minutes) is an estimate, not a stopwatch-verified measurement of a company's process. The automated runtime of **2.71 seconds** was measured on the development machine during a successful run of `python run_monthly_report.py`. Actual runtime can vary with hardware, data size, and workload.
+**Estimated time saved:** about **210 minutes per run**, which is an estimated **99%+ reduction** in report-generation time.
 
-Using these figures, the estimated elapsed time saved is approximately **210 minutes per run**, equivalent to an estimated **over 99% reduction in report-generation elapsed time**. This is a project-level comparison, not a guarantee of business-wide productivity savings; review, interpretation, and distribution may still require human effort.
+<details>
+<summary><b>📏 Measurement notes (click to expand)</b></summary>
 
-To measure runtime on your own machine, run this command in PowerShell from the project directory:
+<br>
+
+- The **3.5 hours (210 minutes)** manual baseline is an **estimate**. It was not timed with a stopwatch on a real company process.
+- The **2.71 seconds** runtime was **measured** on the development machine during a successful run of `python run_monthly_report.py`. Runtime will change with hardware, data size, and workload.
+- This is a project-level comparison, not a promise of business-wide savings. Review, interpretation, and sending the report still take human time.
+
+To measure the runtime on your own machine, run this in PowerShell from the project folder:
 
 ```powershell
 Measure-Command { python run_monthly_report.py }
 ```
 
-## How It Works
+</details>
+
+---
+
+## 🔄 How It Works
 
 ```text
 Superstore CSV
-     |
-     v
-Data Loading (Pandas: schema checks and date parsing)
-     |
-     v
-Cleaning and Validation (missing values, duplicates, invalid dates)
-     |
-     v
-Transformation (Year, Month, and Year-Month dimensions)
-     |
-     v
-Business Metrics (KPIs and category / region / state / time breakdowns)
-     |
-     v
-Excel Generation (OpenPyXL: 8 worksheets, KPI cards, charts, formatting)
-     |
-     v
-Superstore_MIS_YYYY-MM.xlsx  -->  reports/
+     │
+     ▼
+Data Loading ........... Pandas: schema checks and date parsing
+     │
+     ▼
+Cleaning & Validation .. missing values, duplicates, invalid dates
+     │
+     ▼
+Transformation ......... Year, Month, and Year-Month fields
+     │
+     ▼
+Business Metrics ....... KPIs and category / region / state / time breakdowns
+     │
+     ▼
+Excel Generation ....... OpenPyXL: 8 worksheets, KPI cards, charts, formatting
+     │
+     ▼
+reports/Superstore_MIS_YYYY-MM.xlsx
 ```
 
-### Three Automation Options
+### Three ways to run it
 
-1. **Python entry point:** Run `run_monthly_report.py` to detect the latest month available in the dataset and generate the report.
-2. **VBA control panel:** Use the Excel macro-enabled workbook to select a reporting month in `MIS Control Panel!B8` and launch the Python report-generation process.
-3. **Windows Task Scheduler:** Run the Python entry point automatically on the configured monthly schedule.
+| # | Option | How it works |
+|:-:|---|---|
+| 1 | **Python entry point** | Run `run_monthly_report.py`. It finds the latest month in the dataset and builds the report. |
+| 2 | **VBA control panel** | Choose a month in `MIS Control Panel!B8` inside the macro-enabled workbook. The macro starts the Python process. |
+| 3 | **Windows Task Scheduler** | Runs the Python entry point automatically each month. |
 
-> **Important:** The scheduler runs the report-generation script; it does not fetch new Superstore data. The input CSV must be updated separately for the report to include newly available transactions. If the CSV remains unchanged, the script will continue to detect the same latest month.
+> [!IMPORTANT]
+> The scheduler only runs the report script. It **does not fetch new Superstore data**. You must update the input CSV yourself. If the CSV does not change, the script will keep detecting the same latest month.
 
-## Workbook Contents
+---
 
-| Worksheet | Description |
-|---|---|
-| Executive Dashboard | 6 KPI cards, monthly sales and profit trends, category and regional charts |
-| Category Analysis | Furniture, Technology, and Office Supplies performance |
-| Subcategory Analysis | Subcategory-level sales and profit analysis |
-| Regional Analysis | West, East, Central, and South comparison |
-| State Analysis | State-wise sales, profit, and profitability |
-| Monthly Summary | Month-wise sales and profit trends |
-| Yearly Summary | Annual performance for 2014–2017 |
-| Monthly Data | Transaction-level detail for the selected reporting month |
+## 📑 Workbook Contents
 
-**Reporting scope:** Executive Dashboard KPIs and the category, subcategory, regional, state, monthly, and yearly summaries cover the full dataset period (2014–2017). The **Monthly Data** worksheet is scoped to the selected reporting month.
+| # | Worksheet | What it shows |
+|:-:|---|---|
+| 1 | **Executive Dashboard** | 6 KPI cards, monthly sales and profit trends, category and regional charts |
+| 2 | **Category Analysis** | Furniture, Technology, and Office Supplies performance |
+| 3 | **Subcategory Analysis** | Sales and profit by subcategory |
+| 4 | **Regional Analysis** | West, East, Central, and South compared |
+| 5 | **State Analysis** | Sales, profit, and profitability by state |
+| 6 | **Monthly Summary** | Month-by-month sales and profit trends |
+| 7 | **Yearly Summary** | Annual performance, 2014–2017 |
+| 8 | **Monthly Data** | Transaction-level rows for the selected reporting month |
 
-### Executive Dashboard Preview
+> [!NOTE]
+> **Reporting scope:** The dashboard KPIs and the category, subcategory, regional, state, monthly, and yearly sheets cover the **full dataset (2014–2017)**. Only the **Monthly Data** sheet is limited to the selected reporting month.
 
-![Executive Dashboard](screenshots/executive_dashboard.png)
+---
 
-## Quickstart
+## 🚀 Quickstart
 
-### 1. Clone the repository
+**1. Clone the repository**
 
 ```bash
 git clone https://github.com/satyam-katara/excel-report-automation.git
 cd excel-report-automation
 ```
 
-### 2. Create and activate a virtual environment (Windows PowerShell)
+**2. Create and activate a virtual environment (Windows PowerShell)**
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\Activate.ps1
 ```
 
-If PowerShell blocks script activation, you can activate the environment from Command Prompt instead:
+<details>
+<summary>PowerShell blocks the activation script?</summary>
+
+<br>
+
+Use Command Prompt instead:
 
 ```cmd
 .venv\Scripts\activate.bat
 ```
 
-### 3. Install dependencies
+</details>
+
+**3. Install dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Generate the report
+**4. Generate the report**
 
 ```bash
 python run_monthly_report.py
 ```
 
-The generated workbook is saved in the `reports/` directory. The filename follows the pattern `Superstore_MIS_YYYY-MM.xlsx`.
+The workbook is saved in the `reports/` folder as `Superstore_MIS_YYYY-MM.xlsx`.
 
-## Scheduling
+---
 
-The project has been configured with the following Windows Task Scheduler settings:
+## ⏰ Scheduling
+
+The project is set up with these Windows Task Scheduler settings:
 
 | Setting | Value |
 |---|---|
 | Task name | Superstore Monthly MIS Automation |
-| Trigger | Monthly, on the 1st day at 8:00 AM |
+| Trigger | Monthly, on the 1st at 8:00 AM |
 | Script | `run_monthly_report.py` |
-| Reporting month | Automatically detected from the latest month in the input data |
+| Reporting month | Detected automatically from the latest month in the input data |
 
-The computer must be powered on (or configured to wake for the task), and the task must be enabled. Ensure the task uses the project's Python virtual environment and the correct project working directory. The input CSV must also be refreshed separately when new data becomes available.
+**Before you rely on it:**
 
-## VBA Integration
+- The computer must be on, or set to wake for the task
+- The task must be enabled
+- The task must use the project's virtual environment and the correct working directory
+- The input CSV must be refreshed separately when new data arrives
 
-The `vba/` directory contains the VBA source module and macro-enabled Excel workbook:
+---
 
-- `GenerateReport.bas` — VBA macro source.
-- `Superstore_MIS_Automation.xlsm` — macro-enabled control panel workbook.
+## 🧩 VBA Integration
 
-The control panel uses `MIS Control Panel!B8` as the reporting-month input and invokes the Python report-generation process. Python and the project dependencies must be installed on the machine running the macro.
+The `vba/` folder holds the macro source and the control panel workbook:
 
-## Tests
+- `GenerateReport.bas` — VBA macro source
+- `Superstore_MIS_Automation.xlsm` — macro-enabled control panel workbook
 
-Run the test suite from the project root:
+The control panel reads the reporting month from `MIS Control Panel!B8` and starts the Python report process. Python and the project dependencies must be installed on the machine that runs the macro.
+
+---
+
+## ✅ Tests
+
+Run the tests from the project root:
 
 ```bash
 pytest -v
 ```
 
-The project test suite contains **6 tests** covering the data loader, cleaning logic, and report metrics. Run the command locally to confirm the current test status before publishing changes.
+There are **6 tests** covering the data loader, the cleaning logic, and the report metrics. Run them locally to confirm they pass before you publish changes.
 
-## Project Structure
+---
+
+## 🗂️ Project Structure
 
 ```text
 excel-report-automation/
 ├── Data/
 │   └── Sample - Superstore.csv
 ├── logs/
-├── reports/                         # Generated workbooks (git-ignored)
+├── reports/                      # Generated workbooks (git-ignored)
 ├── screenshots/
 │   └── executive_dashboard.png
 ├── src/
-│   ├── main.py                      # Pipeline orchestration
-│   ├── data_loader.py               # CSV loading, schema and date checks
-│   ├── data_cleaning.py              # Cleaning and validation
-│   ├── report_metrics.py             # KPI and breakdown calculations
-│   ├── excel_formatter.py            # Workbook, dashboard, charts and formatting
-│   └── inspect_data.ipynb             # Data exploration notebook
-├── tests/                            # Pytest suite
+│   ├── main.py                   # Pipeline orchestration
+│   ├── data_loader.py            # CSV loading, schema and date checks
+│   ├── data_cleaning.py          # Cleaning and validation
+│   ├── report_metrics.py         # KPI and breakdown calculations
+│   ├── excel_formatter.py        # Workbook, dashboard, charts, formatting
+│   └── inspect_data.ipynb        # Data exploration notebook
+├── tests/                        # Pytest suite
 ├── vba/
-│   ├── GenerateReport.bas             # Control-panel macro source
+│   ├── GenerateReport.bas        # Control panel macro source
 │   └── Superstore_MIS_Automation.xlsm
-├── run_monthly_report.py              # Month-aware entry point
+├── run_monthly_report.py         # Month-aware entry point
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
 
-## Technology Stack
+---
 
-- **Language:** Python
-- **Data processing:** Pandas, NumPy
-- **Excel generation:** OpenPyXL
-- **Visualization:** Matplotlib, Seaborn
-- **Excel automation:** VBA
-- **Scheduling:** Windows Task Scheduler
-- **Testing:** Pytest
+## 🛠️ Technology Stack
 
-## Possible Future Enhancements
+| Area | Tools |
+|---|---|
+| Language | Python |
+| Data processing | Pandas, NumPy |
+| Excel generation | OpenPyXL |
+| Visualization | Matplotlib, Seaborn |
+| Excel automation | VBA |
+| Scheduling | Windows Task Scheduler |
+| Testing | Pytest |
 
-- Automated email distribution of generated reports.
-- Budget-versus-actual analysis when budget data is available.
-- Native Excel slicers for interactive dashboard filtering.
-- Automated ingestion of refreshed source data.
+---
 
-## Author
+## 🔮 Possible Future Enhancements
 
-**Satyam Katara**  
-B.Tech, Computer Science and Engineering (Data Science), 2027  
-[GitHub Profile](https://github.com/satyam-katara)
+- [ ] Send generated reports by email automatically
+- [ ] Budget-versus-actual analysis when budget data is available
+- [ ] Native Excel slicers for interactive dashboard filtering
+- [ ] Automatic ingestion of refreshed source data
+
+---
+
+## 👤 Author
+
+**Satyam Katara**
+B.Tech, Computer Science and Engineering (Data Science), 2027
+
+[![GitHub](https://img.shields.io/badge/GitHub-satyam--katara-181717?logo=github&logoColor=white)](https://github.com/satyam-katara)
